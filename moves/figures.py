@@ -214,9 +214,41 @@ class queen(Figure):
         if moveField in self.listAvailableMoves(currentField):
             return True
         else:
-            return False
+            return Falsed
     
 class king(Figure):
     
     def __str__(self):
         return 'King'
+
+    def listAvailableMoves(self, currentField):
+        ## Change to coordinates
+        coord = self.changeToCoordinates(currentField)
+
+        ## Check possible coordinates
+        startx = coord[0]-1
+        starty = coord[1]-1
+        moves = [
+            (x,y) for x in range(startx, startx+3)\
+                  for y in range(starty, starty+3)\
+                  if (x,y) != coord
+            ]
+
+        ## Change to fields
+        fields = []
+        for m in moves:
+            try:
+                new_field = self.changeToField(m)
+                if self.checkField(new_field):
+                    fields.append(new_field)
+            except IndexError:
+                pass
+        fields.sort()
+
+        return fields
+
+    def validateMove(self, currentField, moveField):
+        if moveField in self.listAvailableMoves(currentField):
+            return True
+        else:
+            return False

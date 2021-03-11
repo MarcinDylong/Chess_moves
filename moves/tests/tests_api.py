@@ -397,3 +397,77 @@ class testKingtValidateMoves(APITestCase):
 
 
 #### King tests
+
+
+class testKingListAvailableMoves(APITestCase):
+
+    def test_status_code_200(self):
+        response = self.client.get('/api/king/h3')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['figure'], 'king')
+        self.assertEqual(response.data['currentField'], 'H3')
+
+    def test_status_code_404(self):
+        response = self.client.get('/api/kng/h3')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data['figure'], 'kng')
+        self.assertEqual(response.data['currentField'], 'H3')
+        self.assertEqual(response.data['error'], 'Figure does not exist')
+
+    def test_status_code_409(self):
+        response = self.client.get('/api/king/z3')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['figure'], 'king')
+        self.assertEqual(response.data['currentField'], 'Z3')
+        self.assertEqual(response.data['error'], 'Field does not exist')
+
+    def test_case_sensitivity(self):
+        response = self.client.get('/api/kINg/a3')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['figure'], 'king')
+        self.assertEqual(response.data['currentField'], 'A3')
+
+    def test_king_moves(self):
+        response = self.client.get('/api/king/a2')
+        self.assertEqual(response.data['availableMoves'], 
+            ['A1','A3','B1','B2','B3']
+        )
+
+    def test_king_moves(self):
+        response = self.client.get('/api/king/d6')
+        self.assertEqual(response.data['availableMoves'], 
+            ['C5','C6','C7','D5','D7','E5','E6','E7']
+        )
+
+    def test_king_moves(self):
+        response = self.client.get('/api/king/h8')
+        self.assertEqual(response.data['availableMoves'], 
+            ['G7','G8','H7']
+        )
+
+class testKingtValidateMoves(APITestCase):
+
+    def test_valid_move1(self):
+        response = self.client.get('/api/king/h3/g2')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['move'], 'valid')
+
+    def test_valid_move2(self):
+        response = self.client.get('/api/king/e5/d6')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['move'], 'valid')
+
+    def test_invalid_current_field(self):
+        response = self.client.get('/api/king/z1/e7')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['move'], 'invalid')
+
+    def test_invalid_move1(self):
+        response = self.client.get('/api/king/f4/b6')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['move'], 'invalid')
+
+    def test_invalid_move2(self):
+        response = self.client.get('/api/king/c5/g6')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['move'], 'invalid')
