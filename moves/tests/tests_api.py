@@ -32,6 +32,14 @@ class testPawnListAvailableMoves(APITestCase):
         response = self.client.get('/api/pawn/a3')
         self.assertEqual(response.data['availableMoves'], ['A4'])
 
+    def test_pawn_moves(self):
+        response = self.client.get('/api/pawn/b7')
+        self.assertEqual(response.data['availableMoves'], ['B8'])
+
+    def test_pawn_moves(self):
+        response = self.client.get('/api/pawn/h2')
+        self.assertEqual(response.data['availableMoves'], ['H3', 'H4'])
+
     def test_pawn_on_1_line(self):
         response = self.client.get('/api/pawn/a1')
         self.assertEqual(response.status_code, 409)

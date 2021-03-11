@@ -72,6 +72,12 @@ class pawn(Figure):
             # If pawns reach 8th line they are promoted to figure so they cannot
             # be on 8th line.
             return []
+        elif coord[1] == 2:
+            newField = []
+            for i in range(1,3):
+                move = (coord[0], coord[1]+i)
+                newField.append(self.changeToField(move))
+            return newField
         else:
             ## Determine moves for pawn
             move = (coord[0], coord[1]+1)
