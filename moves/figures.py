@@ -169,6 +169,26 @@ class bishop(Figure):
     
     def __str__(self):
         return 'Bishop'
+
+    def listAvailableMoves(self, currentField):
+        ## Change to coordinates
+        coord = self.changeToCoordinates(currentField)
+
+        ## Check possible coordinates
+        board = [(x,y) for x in range(1,9) for y in range(1,9) if (x,y)!=coord]
+        moves = [x for x in board if abs(x[0]-coord[0]) == abs(x[1]-coord[1])]
+
+        ## Change to fields
+        fields = list(map(self.changeToField, moves))
+        fields.sort()
+
+        return fields
+
+    def validateMove(self, currentField, moveField):
+        if moveField in self.listAvailableMoves(currentField):
+            return True
+        else:
+            return False
     
 class queen(Figure):
     

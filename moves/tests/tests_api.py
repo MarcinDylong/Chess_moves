@@ -242,6 +242,84 @@ class testKnightValidateMoves(APITestCase):
 
 #### Bishop tests
 
+class testBishopListAvailableMoves(APITestCase):
+
+    def test_status_code_200(self):
+        response = self.client.get('/api/bishop/h3')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['figure'], 'bishop')
+        self.assertEqual(response.data['currentField'], 'H3')
+
+    def test_status_code_404(self):
+        response = self.client.get('/api/beeshop/h3')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data['figure'], 'beeshop')
+        self.assertEqual(response.data['currentField'], 'H3')
+        self.assertEqual(response.data['error'], 'Figure does not exist')
+
+    def test_status_code_409(self):
+        response = self.client.get('/api/bishop/z3')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['figure'], 'bishop')
+        self.assertEqual(response.data['currentField'], 'Z3')
+        self.assertEqual(response.data['error'], 'Field does not exist')
+
+    def test_case_sensitivity(self):
+        response = self.client.get('/api/BiShOp/a3')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['figure'], 'bishop')
+        self.assertEqual(response.data['currentField'], 'A3')
+
+    def test_bishop_moves(self):
+        response = self.client.get('/api/bishop/a2')
+        self.assertEqual(response.data['availableMoves'], 
+            ['A1','A3','C1','C3','D4','E5','F6','G7','H8']
+        )
+
+    def test_bishop_moves(self):
+        response = self.client.get('/api/bishop/d4')
+        self.assertEqual(response.data['availableMoves'], 
+            ['A1','A7','B2','B6','C3','C5','E3','E5','F2','F6','G1','G7','H8']
+        )
+
+    def test_bishop_moves(self):
+        response = self.client.get('/api/bishop/a5')
+        self.assertEqual(response.data['availableMoves'], 
+            ['B4','B6','C3','C7','D2','D8','E1']
+        )
+
+    def test_bishop_moves(self):
+        response = self.client.get('/api/bishop/g3')
+        self.assertEqual(response.data['availableMoves'], 
+            ['B8','C7','D6','E1','E5','F2','F4','H2','H4']
+        )
+
+class testKnightValidateMoves(APITestCase):
+
+    def test_valid_move1(self):
+        response = self.client.get('/api/bishop/h3/d7')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['move'], 'valid')
+
+    def test_valid_move2(self):
+        response = self.client.get('/api/bishop/e5/b2')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['move'], 'valid')
+
+    def test_invalid_current_field(self):
+        response = self.client.get('/api/bishop/z1/e7')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['move'], 'invalid')
+
+    def test_invalid_move1(self):
+        response = self.client.get('/api/bishop/f4/a4')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['move'], 'invalid')
+
+    def test_invalid_move2(self):
+        response = self.client.get('/api/bishop/c5/g3')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['move'], 'invalid')
 
 #### Queen tests
 
