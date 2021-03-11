@@ -42,7 +42,8 @@ class listMoves(APIView):
             ## Check current field
             if fig.checkField(current_field):
                 data['availableMoves'] = fig.listAvailableMoves(current_field)
-                stat=status.HTTP_200_OK
+                stat=status.HTTP_200_OK if len(data['availableMoves']) != 0 \
+                    else status.HTTP_409_CONFLICT
             else:
                 data['error'] = 'Field does not exist'
                 stat=status.HTTP_409_CONFLICT

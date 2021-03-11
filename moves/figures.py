@@ -67,13 +67,17 @@ class pawn(Figure):
         ## Change to coordinates
         coord = self.changeToCoordinates(currentField)
 
-        ## Determine moves for pawn
-        move = (coord[0], coord[1]+1)
-
-        ## Change to Field name
-        newField = self.changeToField(move)
-
-        return [newField]
+        if coord[1] in [1,8]:
+            # Pawns start from 2nd line so Field on 1st line is wrong field
+            # If pawns reach 8th line they are promoted to figure so they cannot
+            # be on 8th line.
+            return []
+        else:
+            ## Determine moves for pawn
+            move = (coord[0], coord[1]+1)
+            ## Change to Field name
+            newField = self.changeToField(move)
+            return [newField]
 
     def validateMove(self, currentField, moveField):
         if moveField in self.listAvailableMoves(currentField):

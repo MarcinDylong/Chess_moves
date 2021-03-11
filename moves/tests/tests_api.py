@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 
-class testListAvailableMoves(APITestCase):
+class testPawnListAvailableMoves(APITestCase):
 
     def test_status_code_200(self):
         response = self.client.get('/api/pawn/h3')
@@ -27,6 +27,19 @@ class testListAvailableMoves(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['figure'], 'pawn')
         self.assertEqual(response.data['currentField'], 'A3')
+
+    def test_pawn_moves(self):
+        response = self.client.get('/api/pawn/a3')
+        self.assertEqual(response.data['availableMoves'], ['A4'])
+
+    def test_pawn_on_1_line(self):
+        response = self.client.get('/api/pawn/a1')
+        self.assertEqual(response.status_code, 409)
+
+    def test_pawn_on_8_line(self):
+        response = self.client.get('/api/pawn/h8')
+        self.assertEqual(response.status_code, 409)
+
 
 
 class testValidateMoves(APITestCase):
