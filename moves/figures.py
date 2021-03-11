@@ -96,6 +96,33 @@ class rook(Figure):
     
     def __str__(self):
         return 'Rook'
+
+
+    def listAvailableMoves(self, currentField):
+        ## Change to coordinates
+        coord = self.changeToCoordinates(currentField)
+
+        ## Create possible moves
+        newMoves = set()
+        for i in range(1,9):
+            newMoves.add((coord[0],i))
+            newMoves.add((i,coord[1]))
+
+        # Remove current position
+        newMoves.remove(coord)
+
+        ## Caange coordinates to field names and sort list
+        fields = list(map(self.changeToField, list(newMoves)))
+        fields.sort()
+
+        return fields
+
+
+    def validateMove(self, currentField, moveField):
+        if moveField in self.listAvailableMoves(currentField):
+            return True
+        else:
+            return False
     
 class knight(Figure):
     

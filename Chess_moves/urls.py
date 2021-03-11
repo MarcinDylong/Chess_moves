@@ -22,6 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/<str:figure>/<str:current_field>', 
         listMoves.as_view()),
-    path('api/<str:figure>/<str:current_field>/<str:move_field>', 
+    path('api/<str:figure>/<str:current_field>/<str:dest_field>', 
         validateMove.as_view()),
 ]

@@ -56,15 +56,55 @@ class listMoves(APIView):
 
 
 class validateMove(APIView):
-    def get(self, request, figure, current_field, move_field):
-        
+    """
+    Check if move is valid
+    """
+    def get(self, request, figure, current_field, dest_field):
+        """
+        Args:
+            figure (str): Chess figure (e.g rook)
+            current_field (str): Field from chess board (e.g. H3)
+            dest_field (str): Destination field from chess board
+
+        Returns:
+            [dict]: Information about move with validity check
+        """
+        ## Case sensivity
+        figure = figure.lower()
+        current_field = current_field.upper()
+        dest_field = dest_field.upper()
+
+        ## Init data
         data = {
-            "move":"valid",
+            "move": None,
             "figure": figure,
             "error": None,
             "currentField": current_field,
-            "destField": move_field
+            "destField": dest_field
             }
 
-        return Response(data)
+        ## Check figure
+        if figure in Figure.allowed_figures:
+            fig = eval(f'{figure}()')
+
+            ## Check current field
+            if fig.checkField(current_field):
+                availableMoves = fig.listAvailableMoves(current_field)
+                if dest_field in availableMoves:
+                    stat=status.HTTP_200_OK
+                    data['move'] = 'valid'
+                else:
+                    stat=status.HTTP_409_CONFLICT
+                    data['move'] = 'invalid'
+            else:
+                data['error'] = 'Field does not exist'
+                data['move'] = 'invalid'
+                stat=status.HTTP_409_CONFLICT
+            
+        else:
+           data['error'] = 'Figure does not exist'
+           data['move'] = 'invalid'
+           stat = status.HTTP_404_NOT_FOUND
+
+        return Response(data, stat)
 
