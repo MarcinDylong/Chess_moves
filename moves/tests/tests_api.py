@@ -131,7 +131,7 @@ class testRookListAvailableMoves(APITestCase):
 
 
 
-class testPawnValidateMoves(APITestCase):
+class testRookValidateMoves(APITestCase):
 
     def test_valid_move1(self):
         response = self.client.get('/api/rook/h3/h4')
@@ -161,6 +161,84 @@ class testPawnValidateMoves(APITestCase):
 
 #### Knight tests
 
+class testKnightListAvailableMoves(APITestCase):
+
+    def test_status_code_200(self):
+        response = self.client.get('/api/knight/h3')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['figure'], 'knight')
+        self.assertEqual(response.data['currentField'], 'H3')
+
+    def test_status_code_404(self):
+        response = self.client.get('/api/kngith/h3')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data['figure'], 'kngith')
+        self.assertEqual(response.data['currentField'], 'H3')
+        self.assertEqual(response.data['error'], 'Figure does not exist')
+
+    def test_status_code_409(self):
+        response = self.client.get('/api/knight/z3')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['figure'], 'knight')
+        self.assertEqual(response.data['currentField'], 'Z3')
+        self.assertEqual(response.data['error'], 'Field does not exist')
+
+    def test_case_sensitivity(self):
+        response = self.client.get('/api/KniGHt/a3')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['figure'], 'knight')
+        self.assertEqual(response.data['currentField'], 'A3')
+
+    def test_knight_moves(self):
+        response = self.client.get('/api/knight/a1')
+        self.assertEqual(response.data['availableMoves'], 
+            ['B3','C2']
+        )
+
+    def test_knight_moves(self):
+        response = self.client.get('/api/knight/h1')
+        self.assertEqual(response.data['availableMoves'], 
+            ['F2','G3']
+        )
+
+    def test_knight_moves(self):
+        response = self.client.get('/api/knight/f4')
+        self.assertEqual(response.data['availableMoves'], 
+            ['D3','D5','E2','E6','G2','G6','H3','H5']
+        )
+
+    def test_knight_moves(self):
+        response = self.client.get('/api/knight/b8')
+        self.assertEqual(response.data['availableMoves'], 
+            ['A6','C6','D7']
+        )
+
+class testKnightValidateMoves(APITestCase):
+
+    def test_valid_move1(self):
+        response = self.client.get('/api/knight/h3/f4')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['move'], 'valid')
+
+    def test_valid_move2(self):
+        response = self.client.get('/api/knight/e5/d3')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['move'], 'valid')
+
+    def test_invalid_current_field(self):
+        response = self.client.get('/api/knight/z1/e7')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['move'], 'invalid')
+
+    def test_invalid_move1(self):
+        response = self.client.get('/api/knight/f4/f5')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['move'], 'invalid')
+
+    def test_invalid_move2(self):
+        response = self.client.get('/api/knight/c5/a5')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.data['move'], 'invalid')
 
 #### Bishop tests
 

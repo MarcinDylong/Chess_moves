@@ -1,3 +1,5 @@
+from itertools import permutations
+
 class Figure:
 
     allowed_figures = ['pawn', 'rook', 'knight', 'bishop', 'queen', 'king']
@@ -45,6 +47,9 @@ class Figure:
         Returns:
             [str]: Field name
         """
+        if coordinates[0] < 1:
+            raise IndexError
+
         field = ''.join([
             self.board_let[coordinates[0]-1], 
             str(coordinates[1])
@@ -128,6 +133,37 @@ class knight(Figure):
     
     def __str__(self):
         return 'Knight'
+
+    def listAvailableMoves(self, currentField):
+        ## Change to coordinates
+        coord = self.changeToCoordinates(currentField)
+
+        ## Create possible moves
+        perm = list(permutations([-2,-1,1,2],2))
+        moves = [x for x in perm if abs(x[0])+abs(x[1]) == 3]
+
+        ## Check moves
+        fields = []
+        for m in moves:
+            new_coord = (
+                coord[0] + m[0],
+                coord[1] + m[1]
+            )
+            try:
+                new_field = self.changeToField(new_coord)
+                if self.checkField(new_field):
+                    fields.append(new_field)
+            except IndexError:
+                pass
+        
+        fields.sort()
+        return fields
+
+    def validateMove(self, currentField, moveField):
+        if moveField in self.listAvailableMoves(currentField):
+            return True
+        else:
+            return False
     
 class bishop(Figure):
     
