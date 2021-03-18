@@ -39,6 +39,7 @@ class TestFigureMethods():
         assert self.fig.changeToField(self.fig.changeToCoordinates('C4')) == \
             'C4', 'Should be C4'
 
+
     @pytest.mark.xfail(raises=NotImplementedError)
     def test_method_raise_error(self):
         self.fig.listAvailableMoves('E5') 

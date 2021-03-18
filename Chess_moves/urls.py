@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from moves.views import listMoves, validateMove
+from moves.views import listMoves, validateMove, index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', index.as_view()),
     path('api/<str:figure>/<str:current_field>', 
         listMoves.as_view()),
     path('api/<str:figure>/<str:current_field>/<str:dest_field>', 

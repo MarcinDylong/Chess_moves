@@ -1,11 +1,20 @@
 from django.shortcuts import render
+from django.views import View
+from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import HttpResponse
+
 
 from moves.figures import Figure, pawn, rook, knight, bishop, queen, king
 
+
+class index(View):
+    """
+    Index view with basics information
+    """
+    def get(self, request):
+        return render(request, 'index.html')
 
 
 class listMoves(APIView):
