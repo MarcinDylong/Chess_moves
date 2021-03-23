@@ -88,11 +88,22 @@ $
 $ # Install modules
 $ pip3 install -r requirements.txt
 $
+$ # You may want to make migrations to avoid warnings but it is not necessary
+$ python3 manage.py makemigrations
+$ python3 manage.py migrate
+$
 $ # Start the application
 $ python3 manage.py runserver
 $
 $ # Access the web app in browser: http://127.0.0.1:8000/
 ```
+
+For running tests type:
+```
+$ pytest
+```
+when in main directory;
+
 
 The app is provided with a basic configuration to be executed in [Docker](https://www.docker.com/):
 
