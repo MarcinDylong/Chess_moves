@@ -7,6 +7,94 @@
         <title>Chess moves</title>
     </head>
     <body>
-        Text
+        <header><h1>The simple REST application supporting the game of chess:</h1></Text></header>
+        <div><h4>The application consist of two adresses:</h4></div>
+        <div>
+            <ul>
+                <li> [GET] `/api/{chess-figure}/{current-field}`;</li> - Return possible moves for given figure from given field.
+                <li> [GET] `/api/{chess-figure}/{current-field}/{dest-field}`</li>
+                Validate move for given figure from given field to other field.
+            </ul>
+            Both adresses not include beats or possible collision with different figures (of the same colour).
+        </div>
+        <hr>
+        <div>
+            <div>
+                <h2> Board </h2>
+                <image src="https://upload.wikimedia.org/wikipedia/commons/2/2c/AAA_SVG_Chessboard_and_chess_pieces_02.svg" width="500" height="600">
+            </div>
+            <div>
+                <h2>Allowed figure:</h2>
+                <ul>
+                    <li> pawn </li>
+                    <li> rook </li>
+                    <li> knight </li>
+                    <li> bishop </li>
+                    <li> queen </li>
+                    <li> king </li>
+                </ul>
+            </div>
+            <div>
+                <h2>Responses</h2>
+                <ul>
+                    <li>200 - When everything is ok</li>
+                    <li>404 - When asked for not allowed figure (names are not case sensitive)</li>
+                    <li>409 - When asked for field outside board</li>
+                    <li>500 - Server error</li>
+                </ul>
+            </div>
+            <div>
+                <h2> Important! </h2>
+                Pawn cannot appear on line 1 or 8, they start from lines 2 or 7 (see image above) and when reach last line
+                they transform to quuen therefore thay cannot appear on respective last line. For this reason asking for pawn on line 1 or 8 will return 409 error<br>
+                Also for sake of simplicity app return moves for white pawns.
+            </div>
+            <div>
+                <h2> Examples: </h2>
+                <b>  [GET] '/api/rook/a1'</b> will return:<br>
+                ''' json
+                {
+                    "availableMoves": [
+                        "A2",
+                        "A3",
+                        "A4",
+                        "A5",
+                        "A6",
+                        "A7",
+                        "A8",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "E1",
+                        "F1",
+                        "G1",
+                        "H1"
+                    ],
+                    "error": null,
+                    "figure": "rook",
+                    "currentField": "A1"
+                }
+                '''<br><br>
+                <b>  [GET] '/api/rook/a1/a6'</b> will return:<br>
+                ''' json
+                {
+                    "move": "invalid",
+                    "figure": "rook",
+                    "error": "Move in not valid",
+                    "currentField": "A1",
+                    "destField": "B6"
+                }
+                '''<br><br>
+                <b>  [GET] '/api/rook/b10'</b> will return:<br>
+                ''' json
+                {
+                    "availableMoves": [],
+                    "error": "Field does not exist",
+                    "figure": "rook",
+                    "currentField": "B10"
+                }
+                '''<br><br>
+            </div>
+        </div>
     </body>
 </html>

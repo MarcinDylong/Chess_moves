@@ -104,6 +104,7 @@ class validateMove(APIView):
                     data['move'] = 'valid'
                 else:
                     stat=status.HTTP_409_CONFLICT
+                    data['error'] = 'Move is not valid'
                     data['move'] = 'invalid'
             else:
                 data['error'] = 'Field does not exist'
